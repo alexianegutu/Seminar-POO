@@ -1,0 +1,821 @@
+#include<iostream>
+using namespace std;
+#pragma warning ( disable:4996)
+
+
+
+
+// enum bool {true=1, false=0 };
+
+enum TipStudent { distanta = 0, zi = 1, ff = 2 };
+
+class Student
+{
+private:
+	// atributele / date membre ale clasei 
+	char* nume; // nume este un pointer care va gestiona adresa unui vector alocat dinamic care va reprezinta numele studentului 
+	string facultate;
+	char gen; //  un caracter ce reprezinta genul studentului
+	bool buget; //  o variabila booleana ce reprezinta bugetul studentluilui 1 buget, 0 taxa 
+	float bursa; // varaibila reala care gestioneaza bursa studentului 
+	int nrNote; // o var intreaga care reprezinta nr de note al studenului si va gestiona si vectorul dinamic de note 
+	int* note;//  un pointer care va gestiona adresa unui vectror dinamic de nr intregi ce reprezinta notele studelui 
+
+
+
+	
+
+	TipStudent tip;
+
+
+
+
+public:
+
+
+	void metodaOarecare()
+	{
+		cout << "Sunt o metoda specifica studentului care nu face nimic" << endl;
+
+		
+
+	}
+
+
+
+	// sa se faca o metoda care afiseaza un student.
+	void  afisare()
+	{
+
+		cout << "Numele este: " << this->nume << endl;
+		cout << "An Inscriere: " << this->anInscriere << endl;
+		cout << "gen este: " << this->gen << endl;
+		cout << "facultate: " << this->facultate << endl;
+		cout << "tip: " << this->tip << endl;
+		if (this->tip == distanta)
+		{
+			cout << "Tip student: distanta" << endl;
+		}
+		else if (this->tip == zi) {
+			cout << "Tip student: zi" << endl;
+		}
+		else if (this->tip == ff) {
+			cout << "Tip student: fara frecventa" << endl;
+		}
+
+		cout << "bursa este: " << this->bursa << " RON" << endl;
+		if (this->buget == true)
+		{
+			cout << "Forma invatamant: BUGET" << endl;
+		}
+		else {
+			cout << "Forma invatamant: TAXA" << endl;
+		}
+		cout << "NR note: " << this->nrNote << endl;
+		cout << "Notele sunt: ";
+		for (int i = 0; i < this->nrNote; i++)
+		{
+			cout << this->note[i] << " ";
+		}
+		cout << endl << endl;
+
+
+	}
+
+	// x.modifcGen('g')
+	void modificaGen(char genNou)
+	{
+		//validare
+		if (genNou == 'f' || genNou == 'm') {
+			this->gen = genNou;
+		}
+
+	}
+
+
+	float getMedie()
+	{
+		float m = 0;
+		if (this->nrNote > 0)
+		{
+			for (int i = 0; i < this->nrNote; i++)
+			{
+				m += this->note[i];
+			}
+			m /= this->nrNote;
+		}
+
+
+		return m;
+	}
+
+
+
+
+
+
+	// Student r;
+	// Constructorul fara parametri. 
+	Student() :anInscriere(2025)
+	{
+		this->bursa = 0;
+		this->buget = false;
+		this->nrNote = 0;
+		this->note = NULL; //nullptr
+		this->gen = '-';
+		this->tip = zi;
+		this->nume = new char[strlen("na") + 1];
+		strcpy(this->nume, "na");
+
+		this->facultate = "na";
+	}
+
+
+
+	// Constructor cu toti parametri
+	// Student x(             "Alexia",2023   ,   'f',"Csie", zi,  true, -900, 3, new int[3] {9, 8, 10});
+	Student(const char* numeDat, int anInscriereDat, char genDat, string facData, TipStudent tipDat, bool bugetDat, float bursaData, int nrNoteDate, int* noteDate) :anInscriere(anInscriereDat)
+	{
+		this->tip = tipDat;
+
+		if (facData.length() > 2) {
+			this->facultate = facData;
+		}
+		else {
+			this->facultate = "na";
+		}
+
+		if (genDat == 'f' || genDat == 'm') {
+			this->gen = genDat;
+		}
+		else {
+			this->gen = '-';
+		}
+
+
+		if (strlen(numeDat) > 2) {
+			this->nume = new char[strlen(numeDat) + 1];
+			strcpy(this->nume, numeDat);
+		}
+		else {
+			this->nume = new char[strlen("na") + 1];
+			strcpy(this->nume, "na");
+		}
+
+
+		//la buget nu ai ce validare sa pui pentru ca roice val ianfara de 0 este 1. 
+		this->buget = bugetDat;
+
+		if (bursaData >= 0) {
+			this->bursa = bursaData;
+		}
+		else {
+			this->bursa = 0;
+		}
+
+		if (nrNoteDate > 0 && noteDate != NULL) {
+			this->nrNote = nrNoteDate;
+			this->note = new int[nrNoteDate];
+			for (int i = 0;i < nrNoteDate; i++)
+			{
+				if (noteDate[i] > 0 && noteDate[i] <= 10) {
+					this->note[i] = noteDate[i];
+				}
+				else {
+					this->note[i] = 0; // stim ca daca in vector e zero inseamna ca o nota este eroanata 
+				}
+
+			}
+		}
+		else {
+			this->nrNote = 0;
+			this->note = NULL; //nullptr
+		}
+
+
+
+	}
+
+
+	// Student x2("Gigel",2024, 'm'); 
+	Student(const char* numeDat, int anDat, char genDat) :anInscriere(anDat)
+	{
+		this->facultate = "na";
+		if (genDat == 'f' || genDat == 'm') {
+			this->gen = genDat;
+		}
+		else {
+			this->gen = '-';
+		}
+		if (strlen(numeDat) > 2) {
+			this->nume = new char[strlen(numeDat) + 1];
+			strcpy(this->nume, numeDat);
+		}
+		else {
+			this->nume = new char[strlen("na") + 1];
+			strcpy(this->nume, "na");
+		}
+		this->nrNote = 0;
+		this->note = NULL;
+		this->buget = 0;
+		this->bursa = 0;
+		this->tip = zi;
+	}
+
+
+
+
+
+
+	Student(const Student& sursa) :anInscriere(sursa.anInscriere)
+	{
+		this->buget = sursa.buget;
+		this->bursa = sursa.bursa;
+		this->nume = new char[strlen(sursa.nume) + 1];
+		strcpy(this->nume, sursa.nume);
+		this->nrNote = sursa.nrNote;
+		this->note = new int[sursa.nrNote];
+		for (int i = 0; i < sursa.nrNote; i++)
+		{
+			this->note[i] = sursa.note[i];
+		}
+		this->gen = sursa.gen;
+		this->tip = sursa.tip;
+		this->facultate = sursa.facultate;
+	}
+
+	Student& operator=  (const Student& sursa)
+	{
+
+		if (this != &sursa)// test auto asignare 
+		{
+
+			delete[] this->nume;
+			delete[] this->note;
+
+			this->buget = sursa.buget;
+			this->bursa = sursa.bursa;
+			this->nume = new char[strlen(sursa.nume) + 1];
+			strcpy(this->nume, sursa.nume);
+			this->nrNote = sursa.nrNote;
+			this->note = new int[sursa.nrNote];
+			for (int i = 0; i < sursa.nrNote; i++)
+			{
+				this->note[i] = sursa.note[i];
+			}
+			this->gen = sursa.gen;
+			this->tip = sursa.tip;
+			this->facultate = sursa.facultate;
+		}
+
+
+		return *this; 
+	}
+
+
+	~Student()
+	{
+		delete[] this->nume;
+		delete[] this->note;
+
+	}
+
+
+
+
+	// getNrRestante 
+	int getNrRestante()
+	{
+		int k = 0; // nr de note restante adica sub 5
+		for (int i = 0; i < this->nrNote; i++)
+		{
+			if (this->note[i] < Student::notaTrecere) {
+				k++;
+			}
+		}
+
+		return k;
+	}
+
+
+	// functii accesor set si get
+
+	// get ne ajuta sa preluam date din obiectul nostru. 
+	float getBursa() {
+		return this->bursa;
+	}
+
+	bool getBuget()
+	{
+		return this->buget;
+	}
+
+	int getNrNote() {
+		return this->nrNote;
+	}
+
+	int getAnInscriere()
+	{
+		return this->anInscriere;
+	}
+
+	char getGen()
+	{
+		return this->gen;
+	}
+
+	static int getNotaTrecere() {
+		return Student::notaTrecere;
+	}
+
+	TipStudent getTip() {
+		return this->tip;
+	}
+
+	string getFacultate() {
+		return  this->facultate;
+	}
+
+
+	char* getNume()
+	{
+		char* cv;
+		cv = new char[strlen(this->nume) + 1];
+		strcpy(cv, this->nume);// in cv am copiat ce este in nume. 
+	
+		return cv;
+
+	}
+
+
+
+	int* getNote() {
+		int* cv;
+		cv = new int[this->nrNote];
+		for (int i = 0; i < this->nrNote; i++) {
+			cv[i] = this->note[i];
+		}
+		return cv;
+	}
+
+
+	void setBursa(float bursaData)
+	{
+		if (bursaData >= 0) {
+			this->bursa = bursaData;
+		}
+	}
+
+	void setGen(char genDat)
+	{
+		if (genDat == 'f' || genDat == 'm') {
+			this->gen = genDat;
+		}
+	}
+
+	void setBuget(bool b) {
+		this->buget = b;
+	}
+
+	
+	static void setNotaTrecere(int notaNoua) 
+	{
+		if (notaNoua >= 1 && notaNoua <= 10) {
+			Student::notaTrecere = notaNoua;
+		}
+	}
+
+
+	void setNume(const char* numeDat)
+	{
+		if (strlen(numeDat) > 2) {
+			delete[] this->nume;
+			this->nume = new char[strlen(numeDat) + 1];
+			strcpy(this->nume, numeDat);
+		}
+	}
+
+
+
+	void setNrNote(int nrNoteDate, int* noteDate)
+	{
+		if (nrNoteDate > 0 && noteDate != NULL) {
+			delete[] this->note;
+			this->nrNote = nrNoteDate;
+			this->note = new int[nrNoteDate];
+			for (int i = 0;i < nrNoteDate; i++)
+			{
+				if (noteDate[i] > 0 && noteDate[i] <= 10) {
+					this->note[i] = noteDate[i];
+				}
+				else {
+					this->note[i] = 0; // stim ca daca in vector e zero inseamna ca o nota este eroanata 
+				}
+
+			}
+		}
+	}
+
+	void setTipStudent(TipStudent tipNou)
+	{
+		this->tip = tipNou;
+	}
+
+	void setFacultate(string facNoua) {
+		if (facNoua.length() > 2) {
+			this->facultate = facNoua;
+		}
+	}
+
+
+	// friend ne ajuta sa accesam din afara clasei  datele private din  interiourul obiectului, declarand fucnctia friend in interorurul clasei.
+	friend  ostream& operator<<(ostream& out, Student  sursa);
+	friend  istream& operator >> (istream& in, Student& sursa);
+
+
+
+
+
+	// operatori 
+
+
+
+	Student&  operator+= (float val )
+	{ 
+		this->bursa = this->bursa + val;
+		return *this;
+	}
+ 
+
+
+
+
+	// operatori aritmetici binari = - / * % 
+
+
+
+	Student operator + (float val)
+	{
+		Student copie(*this);
+		copie.bursa += val;
+		return copie;
+	}
+
+
+
+
+
+	// operatori de incrementare si decrementare ++ -- cu formele post(c++)  si  pre(++c) 
+
+	
+	//              
+	Student& operator++ ()
+	{
+		this->bursa += 10;
+		return *this;
+	}
+
+	
+	Student operator++(int)
+	{
+		Student copie(*this);
+		this->bursa += 10;
+		return copie;
+	}
+
+
+	
+
+	 
+	// operatori relationali sau de comapratie > < == != >=  <= 
+
+
+	bool operator== (Student sursa)
+	{
+		if (this->bursa == sursa.bursa)
+		{
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+
+	bool operator== (float valaoreComaprata)
+	{
+		if (this->bursa == valaoreComaprata)
+		{
+			return true;
+		}
+		else {
+			return false;
+		}
+
+	}
+
+
+
+	explicit operator float() {
+		return this->bursa;
+	}
+
+
+
+
+	int  operator[] (int index)
+	{
+		if (index >= 0 && index < this->nrNote)
+		{
+			return this->note[index];
+		}
+		else {
+			throw new exception("index gresit"); // am lansat o exceptie... se blocheaza codul si crapa programul daca dai index gresit.  aceasta exceptie in viitor o vom trata... ca sanu mai crape 
+		}
+
+	}
+
+
+
+	void maresteBursa(float val)
+	{
+		this->bursa += val;
+	}
+
+	// sa se faca op fucntie care mareste bursa cu o val data. 
+	void operator() (float val)
+	{
+		this->bursa += val;
+	}
+
+
+
+	// operator !   returneaza de regula o negatie. 
+	bool operator! ()
+	{
+		return !this->buget;
+	}
+	//apel in  main:   cout<< (!x)<<endl;
+
+
+
+
+
+	void operator~  ()
+	{
+		if (this->buget == true) {
+			this->buget = false;
+		}
+		else {
+			this->buget = true;
+		}
+	}
+
+
+
+
+
+
+};
+int Student::notaTrecere = 6;// initializarea atributului static 
+
+
+
+ostream& operator<<(ostream& out, Student  sursa)
+{
+
+	out << "nume este " << sursa.nume << endl;
+	out << "An Inscriere: " << sursa.anInscriere << endl;
+	out << "gen este: " << sursa.gen << endl;
+	out << "facultate: " << sursa.facultate << endl;
+	out << "tip: " << sursa.tip << endl;
+	if (sursa.tip == distanta)
+	{
+		out << "Tip student: distanta" << endl;
+	}
+	else if (sursa.tip == zi) {
+		out << "Tip student: zi" << endl;
+	}
+	else if (sursa.tip == ff) {
+		out << "Tip student: fara frecventa" << endl;
+	}
+
+	out << "bursa este: " << sursa.bursa << " RON" << endl;
+	if (sursa.buget == true)
+	{
+		out << "Forma invatamant: BUGET" << endl;
+	}
+	else {
+		out << "Forma invatamant: TAXA" << endl;
+	}
+	out << "NR note: " << sursa.nrNote << endl;
+	out << "Notele sunt: ";
+	for (int i = 0; i < sursa.nrNote; i++)
+	{
+		out << sursa.note[i] << " ";
+	}
+	out << endl << endl;
+
+	return out;
+}
+
+
+istream& operator >> (istream& in, Student& sursa) // intotdeauna cu & ca sursa sa faca referire catre ob original din main!!! atlfel o sa bagi valori intr o copie si x din main ramane intact.
+{
+
+	// char* 
+	char buffer[200];
+	cout << "Da numele ";
+	in >> buffer; // gigel
+	delete[] sursa.nume;
+	sursa.nume = new char[strlen(buffer) + 1];
+	strcpy(sursa.nume, buffer);
+
+	//  sursa.setNume(buffer);
+
+
+	 // int bool float double char string si vector de caractere alocat static ex: char nume[100];
+	 // adica pt atribute normale 
+	cout << "Da facultatea: ";
+	in >> sursa.facultate;
+
+	cout << "Da buget: ";
+	in >> sursa.buget;
+
+	cout << "Da bursa: ";
+	in >> sursa.bursa;
+
+	//float auxBursa;
+	//in >> auxBursa;
+	//sursa.setBursa(auxBursa);
+
+	cout << "Da gen: ";
+	in >> sursa.gen;
+
+
+
+	//nota9
+	// pentru int* float*  string* bool* double* oricelatlcevga cu * 
+	cout << "Da nr de note: ";
+	in >> sursa.nrNote;
+	delete[] sursa.note;
+	sursa.note = new int[sursa.nrNote];
+	for (int i = 0; i < sursa.nrNote; i++)
+	{
+		cout << "Da nota pentru materia " << i + 1 << ": ";
+		in >> sursa.note[i];
+	}
+
+
+	
+
+
+
+
+
+	// pt enum: 
+	cout << "Da tipul(0 distanta 1zi, 2ff: ";
+	int auxTip;
+	in >> auxTip;
+	sursa.tip = (TipStudent)auxTip;
+
+
+
+
+	
+
+
+
+	return in;
+}
+
+
+
+void subprogramOarecare()
+{
+	cout << "Sunt un subprogram opareacare" << endl;
+}
+
+
+
+void f()
+{
+	cout << " eu sunt f()" << endl;
+}
+
+void f(int x, char y)
+{
+	cout << "Eu sunt f (int char)" << endl;
+}
+
+void f(int x, int  y)
+{
+	cout << "Eu sunt f (int int)" << endl;
+}
+
+void f(char x, int  y)
+{
+	cout << "Eu sunt f (char  int)" << endl;
+}
+
+
+
+int main()
+{
+
+	f();
+	f(1, 1);
+	f('x', 1);
+
+
+
+	int note_db[100] = { 9,10,7 };
+	int nrNoteDB = 3;
+
+
+
+	Student y;// am declarat obiectul 
+	Student z;
+
+	Student x("Alexia", 2023, 'f', "Csie", zi, true, 900, 3, new int[3] {9, 8, 10});
+	Student x1("Cata", 2023, 'f', "Csie", zi, true, 900, 3, note_db);
+
+	x1.setFacultate("Poli");
+
+	Student x2("Gigel", 2024, 'm');
+	Student u;
+
+
+	x += 22;
+	x = x + 22;
+	 
+	if (x == 100) {
+		cout << "X are bursa 100" << endl;
+	}
+
+
+
+
+	float bugetBurse = x.getBursa() + x1.getBursa();//si tot asa in fucntie de cine ai nevoiie.
+
+
+
+	// Constructor de copiere 
+	Student x3(x);
+
+
+	Student::setNotaTrecere(7); // apelarea metode statice 
+
+
+
+
+
+	/*
+	string
+	enum
+	>>
+	<<
+	friend
+
+	*/
+
+	x.afisare();
+
+
+	// string este o variabila ce ne ajuta sa gestionam un sir de caractere alocat dinamic.
+
+	char* numeStudent;
+	numeStudent = new  char[strlen("Alexia") + 1];
+	strcpy(numeStudent, "Alexia");
+
+	char* nume2;
+	nume2 = new char[strlen(numeStudent) + 1];
+	strcpy(nume2, numeStudent);
+
+	//cout << nume2 << " " << numeStudent << endl;
+
+	delete[] nume2;
+	delete[] numeStudent;
+
+
+	string sir1 = "Alexia";
+	string sir2 = sir1;
+
+	//cout << sir1 << " " << sir2 << endl;
+	//
+	//sir1[5] = 's';
+	//cout << sir1 << endl;
+	//sir1 += " Negutu";
+	//cout << sir1;
+	//cout << "Lungimea lui sir1 este " << sir1.length() << endl;
+	//
+	//sir2 = sir1;
+	//cout << (sir1 == sir2) << endl;
+
+
+
+
+
+	return 0;// se va apela automat destrucvtorul si va sterge toate obiectele puse in stiva 
+}
+
