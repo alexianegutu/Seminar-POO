@@ -1,0 +1,161 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include<iostream>
+using namespace std;
+
+enum Grad{rau=-1,neutru,bune,erou};
+class Caracter {
+private:
+	char* nume;
+	char gen;
+	string guild;
+	Grad grad;
+	int viata;
+	int nrSkilluri;
+	int* skilluri;
+	static int nrCaractere;
+	const int id;
+
+
+
+
+public:
+//1. destructor
+	~Caracter() {
+		delete[] this->nume;
+		delete[] this->skilluri;
+		Caracter::nrCaractere--;//de cate ori se apeleaza destructorul scade nr de caractere
+	}
+
+
+
+
+
+
+
+//2.constructori
+//constructorul fara param
+	Caracter() :id(0) {
+		this->nume = new char[strlen("na") + 1];
+		strcpy(this->nume, "na");
+		this->gen = 'm';
+		this->guild = "na";
+		this->grad = neutru;
+		this->viata = 100;
+		this->nrSkilluri = 0;
+		this->skilluri = nullptr;
+		Caracter::nrCaractere++;//::pt ca e static si descrie toata clasa
+	}
+
+
+
+
+
+
+//constructor cu toti param
+	//Caracter c1(1,"Gigel",              'm',   "Echipa Franceza",   bune,         1000,        5,                      new int[5]{10,20,30,40,50} );
+	Caracter(int idDat, const char* numeDat, char genDat, string guildDat, Grad gradDat, int viataDat, int nrSkilluriDat, int* skilluriDat) :id(idDat) {
+		this->nume = new char[strlen(numeDat) + 1];
+		strcpy(this->nume, numeDat);
+		this->gen = genDat;
+		this->guild = guildDat;
+		this->grad = gradDat;
+		this->viata = viataDat;
+		this->nrSkilluri = nrSkilluriDat;
+		this->skilluri = new int[nrSkilluriDat];
+		for (int i = 0;i < nrSkilluriDat;i++) {
+			this->skilluri[i] = skilluriDat[i];
+		}
+		Caracter::nrCaractere++;
+	}
+
+
+
+
+
+
+//constructor cu 2 param
+	//caracter c( "Gigel",150)
+	Caracter(const char* numeDat, int viataDat) :id(0) {
+		this->nume = new char[strlen(numeDat) + 1];
+		strcpy(this->nume, numeDat);
+		this->gen = 'm';
+		this->guild = "na";
+		this->grad = neutru;
+		this->viata = 100;
+		this->nrSkilluri = 0;
+		this->skilluri = nullptr;
+		Caracter::nrCaractere++;//::pt ca e static si descrie toata clasa
+	}
+
+
+
+
+
+
+
+
+//constructorul de copiere
+
+	Caracter(const Caracter& sursa):id(sursa.id) {
+		this->nume = new char[strlen(sursa.nume) + 1];
+		strcpy(this->nume, sursa.nume);
+		this->gen = sursa.gen;
+		this->guild = sursa.guild;
+		this->grad = sursa.grad;
+		this->viata = sursa.viata;
+		this->nrSkilluri = sursa.nrSkilluri;
+		this->skilluri = new int[sursa.nrSkilluri];
+		for (int i = 0;i < sursa.nrSkilluri;i++) {
+			this->skilluri[i] = sursa.skilluri[i];
+		}
+		Caracter::nrCaractere++;
+	}
+
+
+
+
+
+
+
+//operatorul =
+	Caracter& operator= (const Caracter& sursa) {
+		if (this != &sursa) {
+			delete[] this->nume;
+			delete[] this->skilluri;
+
+			this->nume = new char[strlen(sursa.nume) + 1];
+			strcpy(this->nume, sursa.nume);
+			this->gen = sursa.gen;
+			this->guild = sursa.guild;
+			this->grad = sursa.grad;
+			this->viata = sursa.viata;
+			this->nrSkilluri = sursa.nrSkilluri;
+			this->skilluri = new int[sursa.nrSkilluri];
+			for (int i = 0;i < sursa.nrSkilluri;i++) {
+				this->skilluri[i] = sursa.skilluri[i];
+			}
+		
+		}
+		return *this;
+	}
+
+
+
+
+
+
+};
+int Caracter::nrCaractere = 0;
+
+int main(){
+
+	Caracter c;//apel constr fara param
+	Caracter c1(1,"Gigel", 'm', "Echipa Franceza", bune, 1000, 5, new int[5] {10, 20, 30, 40, 50});
+	Caracter c2("Gigel", 150);
+	Caracter c3(c1);
+	c = c1;
+
+
+	return 0;
+}
